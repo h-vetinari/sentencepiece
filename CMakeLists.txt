@@ -68,9 +68,9 @@ add_definitions(-D_FREEBSD)
 endif()
 
 if (SPM_USE_BUILTIN_PROTOBUF)
-  set(libprotobuf_lite "")
+  set(libprotobuf "")
 else()
-  set(libprotobuf_lite "-lprotobuf-lite")
+  set(libprotobuf "-lprotobuf")
 endif()
 
 if (MSVC)
@@ -147,7 +147,7 @@ if (SPM_BUILD_TEST)
 endif()
 
 if (SPM_USE_EXTERNAL_ABSL)
- add_subdirectory(third_party/abseil-cpp)
+ find_package(absl REQUIRED)
 endif()
 
 add_subdirectory(src)
