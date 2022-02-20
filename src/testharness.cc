@@ -25,8 +25,9 @@
 #include <string>
 #include <vector>
 
+#include "absl/strings/str_cat.h"
+
 #include "common.h"
-#include "third_party/absl/strings/str_cat.h"
 #include "util.h"
 
 namespace sentencepiece {

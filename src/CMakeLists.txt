@@ -89,12 +89,6 @@ endif()
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../third_party)
 
-if (MSVC)
-  add_definitions("/D_USE_INTERNAL_STRING_VIEW")
-else()
-  add_definitions("-D_USE_INTERNAL_STRING_VIEW")
-endif()
-
 set(SPM_SRCS
   ${PROTOBUF_LITE_SRCS}
   ${SPM_PROTO_HDRS}

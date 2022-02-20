@@ -11,11 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.!
+
 #include "pretokenizer_for_training.h"
 
 #include <string>
 
-#include "third_party/absl/strings/str_replace.h"
+#include "absl/strings/str_replace.h"
 
 namespace sentencepiece {
 namespace pretokenizer {

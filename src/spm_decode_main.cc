@@ -16,13 +16,14 @@
 #include <string>
 #include <vector>
 
+#include "absl/flags/flag.h"
+#include "absl/strings/str_split.h"
+
 #include "common.h"
 #include "filesystem.h"
 #include "init.h"
 #include "sentencepiece.pb.h"
 #include "sentencepiece_processor.h"
-#include "third_party/absl/flags/flag.h"
-#include "third_party/absl/strings/str_split.h"
 #include "util.h"
 
 ABSL_FLAG(std::string, model, "", "model file name");

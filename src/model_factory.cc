@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.!
 
+#include "absl/memory/memory.h"
+
 #include "bpe_model.h"
 #include "char_model.h"
 #include "model_factory.h"
-#include "third_party/absl/memory/memory.h"
 #include "unigram_model.h"
 #include "word_model.h"
 

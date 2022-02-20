@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.!
 
+#include "absl/strings/string_view.h"
+
 #include "common.h"
 #include "testharness.h"
-#include "third_party/absl/strings/string_view.h"
 #include "unicode_script.h"
 #include "util.h"
 

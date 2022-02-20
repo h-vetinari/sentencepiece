@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.!
 
+#include "absl/strings/str_cat.h"
+
 #include "filesystem.h"
 #include "testharness.h"
-#include "third_party/absl/strings/str_cat.h"
 #include "util.h"
 
 namespace sentencepiece {

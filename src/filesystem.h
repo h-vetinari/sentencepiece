@@ -21,9 +21,10 @@
 #include <memory>
 #include <string>
 
+#include "absl/strings/string_view.h"
+
 #include "common.h"
 #include "sentencepiece_processor.h"
-#include "third_party/absl/strings/string_view.h"
 
 namespace sentencepiece {
 namespace filesystem {

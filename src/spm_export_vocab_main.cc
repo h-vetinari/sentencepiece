@@ -14,12 +14,13 @@
 
 #include <sstream>
 
+#include "absl/flags/flag.h"
+
 #include "common.h"
 #include "filesystem.h"
 #include "init.h"
 #include "sentencepiece_model.pb.h"
 #include "sentencepiece_processor.h"
-#include "third_party/absl/flags/flag.h"
 
 ABSL_FLAG(std::string, output, "", "Output filename");
 ABSL_FLAG(std::string, model, "", "input model file name");

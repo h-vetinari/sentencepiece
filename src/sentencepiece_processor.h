@@ -15,18 +15,13 @@
 #ifndef SENTENCEPIECE_PROCESSOR_H_
 #define SENTENCEPIECE_PROCESSOR_H_
 
+#include "absl/strings/string_view.h"
+
 #include <cstring>
 #include <memory>
 #include <string>
-#include <string_view>
 #include <utility>
 #include <vector>
-
-#ifndef SWIG
-namespace absl {
-using std::string_view;
-}  // namespace absl
-#endif  // SWIG
 
 namespace sentencepiece {
 namespace util {

@@ -18,12 +18,13 @@
 #include <sstream>
 #include <string>
 
+#include "absl/flags/flag.h"
+#include "absl/strings/string_view.h"
+
 #include "builder.h"
 #include "filesystem.h"
 #include "init.h"
 #include "sentencepiece_processor.h"
-#include "third_party/absl/flags/flag.h"
-#include "third_party/absl/strings/string_view.h"
 
 using sentencepiece::normalizer::Builder;
 

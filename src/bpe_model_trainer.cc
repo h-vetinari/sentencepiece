@@ -19,10 +19,11 @@
 #include <unordered_set>
 #include <vector>
 
+#include "absl/container/flat_hash_set.h"
+#include "absl/strings/str_join.h"
+#include "absl/strings/str_replace.h"
+
 #include "pretokenizer_for_training.h"
-#include "third_party/absl/container/flat_hash_set.h"
-#include "third_party/absl/strings/str_join.h"
-#include "third_party/absl/strings/str_replace.h"
 #include "util.h"
 
 namespace sentencepiece {

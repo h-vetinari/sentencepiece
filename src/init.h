@@ -15,9 +15,10 @@
 #ifndef INIT_H_
 #define INIT_H_
 
+#include "absl/flags/flag.h"
+#include "absl/flags/parse.h"
+
 #include "common.h"
-#include "third_party/absl/flags/flag.h"
-#include "third_party/absl/flags/parse.h"
 
 #ifdef _USE_EXTERNAL_PROTOBUF
 #include "google/protobuf/message_lite.h"

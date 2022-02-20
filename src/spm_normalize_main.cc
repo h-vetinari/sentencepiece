@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.!
 
+#include "absl/flags/flag.h"
+
 #include "builder.h"
 #include "common.h"
 #include "filesystem.h"
@@ -21,7 +23,6 @@
 #include "sentencepiece_model.pb.h"
 #include "sentencepiece_processor.h"
 #include "sentencepiece_trainer.h"
-#include "third_party/absl/flags/flag.h"
 
 ABSL_FLAG(std::string, model, "", "Model file name");
 ABSL_FLAG(bool, use_internal_normalization, false,

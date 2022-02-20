@@ -15,12 +15,13 @@
 #include <string>
 #include <vector>
 
+#include "absl/strings/str_cat.h"
+#include "absl/strings/str_join.h"
+
 #include "char_model_trainer.h"
 #include "filesystem.h"
 #include "sentencepiece_processor.h"
 #include "testharness.h"
-#include "third_party/absl/strings/str_cat.h"
-#include "third_party/absl/strings/str_join.h"
 #include "util.h"
 
 namespace sentencepiece {
