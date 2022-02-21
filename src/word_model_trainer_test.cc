@@ -19,6 +19,7 @@
 #include "absl/strings/str_join.h"
 
 #include "filesystem.h"
+#include "glue/flags/flag.h"
 #include "sentencepiece_processor.h"
 #include "testharness.h"
 #include "util.h"
@@ -33,9 +34,9 @@ namespace {
 
 std::string RunTrainer(const std::vector<std::string> &input, int size) {
   const std::string input_file =
-      util::JoinPath(absl::GetFlag(FLAGS_test_tmpdir), "input");
+      util::JoinPath(sentencepiece::GetFlag(FLAGS_test_tmpdir), "input");
   const std::string model_prefix =
-      util::JoinPath(absl::GetFlag(FLAGS_test_tmpdir), "model");
+      util::JoinPath(sentencepiece::GetFlag(FLAGS_test_tmpdir), "model");
   {
     auto output = filesystem::NewWritableFile(input_file);
     for (const auto &line : input) {

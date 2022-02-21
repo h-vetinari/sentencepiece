@@ -21,6 +21,7 @@
 #include "absl/strings/str_join.h"
 
 #include "filesystem.h"
+#include "glue/flags/flag.h"
 #include "sentencepiece_model.pb.h"
 #include "sentencepiece_processor.h"
 #include "sentencepiece_trainer.h"
@@ -49,9 +50,9 @@ TrainerResult RunTrainer(const std::vector<std::string>& input, int size,
                          const bool use_dp = false, const float dp_noise = 0.0,
                          const uint32 dp_clip = 0) {
   const std::string input_file =
-      util::JoinPath(absl::GetFlag(FLAGS_test_tmpdir), "input");
+      util::JoinPath(sentencepiece::GetFlag(FLAGS_test_tmpdir), "input");
   const std::string model_prefix =
-      util::JoinPath(absl::GetFlag(FLAGS_test_tmpdir), "model");
+      util::JoinPath(sentencepiece::GetFlag(FLAGS_test_tmpdir), "model");
   {
     auto output = filesystem::NewWritableFile(input_file);
     for (const auto& line : input) {
@@ -156,13 +157,13 @@ static constexpr char kTestInputData[] = "wagahaiwa_nekodearu.txt";
 
 TEST(UnigramTrainerTest, EndToEndTest) {
   const std::string input =
-      util::JoinPath(absl::GetFlag(FLAGS_test_srcdir), kTestInputData);
+      util::JoinPath(sentencepiece::GetFlag(FLAGS_test_srcdir), kTestInputData);
 
   ASSERT_TRUE(
       SentencePieceTrainer::Train(
           absl::StrCat(
               "--model_prefix=",
-              util::JoinPath(absl::GetFlag(FLAGS_test_tmpdir), "tmp_model"),
+              util::JoinPath(sentencepiece::GetFlag(FLAGS_test_tmpdir), "tmp_model"),
               " --input=", input,
               " --vocab_size=8000 --normalization_rule_name=identity",
               " --model_type=unigram --user_defined_symbols=<user>",
@@ -170,7 +171,7 @@ TEST(UnigramTrainerTest, EndToEndTest) {
           .ok());
 
   SentencePieceProcessor sp;
-  EXPECT_TRUE(sp.Load(util::JoinPath(absl::GetFlag(FLAGS_test_tmpdir),
+  EXPECT_TRUE(sp.Load(util::JoinPath(sentencepiece::GetFlag(FLAGS_test_tmpdir),
                                      "tmp_model.model"))
                   .ok());
   EXPECT_EQ(8000, sp.GetPieceSize());

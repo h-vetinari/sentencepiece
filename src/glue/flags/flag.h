@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.!
 
-#ifndef ABSL_FLAGS_FLAG_H_
-#define ABSL_FLAGS_FLAG_H_
+#ifndef SENTENCEPIECE_FLAG_H_
+#define SENTENCEPIECE_FLAG_H_
 
 #include <functional>
 #include <memory>
 #include <string>
 #include <vector>
 
-namespace absl {
+namespace sentencepiece {
 namespace internal {
 struct FlagFunc;
 
@@ -54,15 +54,15 @@ void SetFlag(Flag<T> *flag, const V &v) {
   flag->set_value(value);
 }
 
-#define HAS_ABSL_CLEANUP_FLAGS
+#define HAS_STPC_CLEANUP_FLAGS
 
 void CleanupFlags();
 
-}  // namespace absl
+}  // namespace sentencepiece
 
-#define ABSL_FLAG(Type, name, defautl_value, help) \
-  absl::Flag<Type> FLAGS_##name(#name, #Type, help, defautl_value);
+#define STPC_FLAG(Type, name, default_value, help) \
+  sentencepiece::Flag<Type> FLAGS_##name(#name, #Type, help, default_value);
 
-#define ABSL_DECLARE_FLAG(Type, name) extern absl::Flag<Type> FLAGS_##name;
+#define STPC_DECLARE_FLAG(Type, name) extern sentencepiece::Flag<Type> FLAGS_##name;
 
-#endif  // ABSL_FLAGS_FLAG_H_
+#endif  // SENTENCEPIECE_FLAG_H_

@@ -12,25 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.!
 
-#include "third_party/absl/flags/flag.h"
-
 #include <algorithm>
 #include <iostream>
 #include <map>
 #include <sstream>
 #include <string>
 
-#include "config.h"
-#include "src/common.h"
-#include "src/util.h"
+#include "flag.h"
 
-ABSL_FLAG(bool, help, false, "show help");
-ABSL_FLAG(bool, version, false, "show version");
-ABSL_FLAG(int, minloglevel, 0,
+#include "config.h"
+#include "../../common.h"
+#include "../../util.h"
+
+STPC_FLAG(bool, help, false, "show help");
+STPC_FLAG(bool, version, false, "show version");
+STPC_FLAG(int, minloglevel, 0,
           "Messages logged at a lower level than this don't actually get "
           "logged anywhere");
 
-namespace absl {
+namespace sentencepiece {
 namespace internal {
 namespace {
 template <typename T>
@@ -209,10 +209,10 @@ std::vector<char *> ParseCommandLine(int argc, char *argv[]) {
     }
   }
 
-  if (absl::GetFlag(FLAGS_help)) {
+  if (sentencepiece::GetFlag(FLAGS_help)) {
     std::cout << internal::PrintHelp(argv[0]);
     sentencepiece::error::Exit(0);
-  } else if (absl::GetFlag(FLAGS_version)) {
+  } else if (sentencepiece::GetFlag(FLAGS_version)) {
     std::cout << PACKAGE_STRING << " " << VERSION << std::endl;
     sentencepiece::error::Exit(0);
   }
@@ -229,4 +229,4 @@ void CleanupFlags() {
   }
 }
 
-}  // namespace absl
+}  // namespace sentencepiece

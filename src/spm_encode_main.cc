@@ -17,38 +17,38 @@
 #include <vector>
 
 #include "absl/container/flat_hash_map.h"
-#include "absl/flags/flag.h"
 #include "absl/strings/str_cat.h"
 #include "absl/strings/str_join.h"
 
 #include "common.h"
 #include "filesystem.h"
+#include "glue/flags/flag.h"
 #include "init.h"
 #include "sentencepiece.pb.h"
 #include "sentencepiece_processor.h"
 #include "trainer_interface.h"
 
-ABSL_FLAG(std::string, model, "", "model file name");
-ABSL_FLAG(
+STPC_FLAG(std::string, model, "", "model file name");
+STPC_FLAG(
     std::string, output_format, "piece",
     "choose from piece, id, proto, nbest_piece, nbest_id, or nbest_proto");
-ABSL_FLAG(std::string, input, "", "input filename");
-ABSL_FLAG(std::string, output, "", "output filename");
-ABSL_FLAG(std::string, extra_options, "",
+STPC_FLAG(std::string, input, "", "input filename");
+STPC_FLAG(std::string, output, "", "output filename");
+STPC_FLAG(std::string, extra_options, "",
           "':' separated encoder extra options, e.g., \"reverse:bos:eos\"");
-ABSL_FLAG(int32, nbest_size, 10, "NBest size");
-ABSL_FLAG(double, alpha, 0.5, "Smoothing parameter for sampling mode.");
-ABSL_FLAG(uint32, random_seed, static_cast<uint32>(-1),
+STPC_FLAG(int32, nbest_size, 10, "NBest size");
+STPC_FLAG(double, alpha, 0.5, "Smoothing parameter for sampling mode.");
+STPC_FLAG(uint32, random_seed, static_cast<uint32>(-1),
           "Seed value for random generator.");
 
 // Piece restriction with vocabulary file.
 // https://github.com/rsennrich/subword-nmt#best-practice-advice-for-byte-pair-encoding-in-nmt
-ABSL_FLAG(std::string, vocabulary, "",
+STPC_FLAG(std::string, vocabulary, "",
           "Restrict the vocabulary. The encoder only emits the "
           "tokens in \"vocabulary\" file");
-ABSL_FLAG(int32, vocabulary_threshold, 0,
+STPC_FLAG(int32, vocabulary_threshold, 0,
           "Words with frequency < threshold will be treated as OOV");
-ABSL_FLAG(bool, generate_vocabulary, false,
+STPC_FLAG(bool, generate_vocabulary, false,
           "Generates vocabulary file instead of segmentation");
 
 int main(int argc, char *argv[]) {
@@ -56,34 +56,34 @@ int main(int argc, char *argv[]) {
   sentencepiece::ParseCommandLineFlags(argv[0], &argc, &argv, true);
   std::vector<std::string> rest_args;
 
-  if (absl::GetFlag(FLAGS_input).empty()) {
+  if (sentencepiece::GetFlag(FLAGS_input).empty()) {
     for (int i = 1; i < argc; ++i) {
       rest_args.push_back(std::string(argv[i]));
     }
   } else {
-    rest_args.push_back(absl::GetFlag(FLAGS_input));
+    rest_args.push_back(sentencepiece::GetFlag(FLAGS_input));
   }
 
-  if (absl::GetFlag(FLAGS_random_seed) != -1) {
-    sentencepiece::SetRandomGeneratorSeed(absl::GetFlag(FLAGS_random_seed));
+  if (sentencepiece::GetFlag(FLAGS_random_seed) != -1) {
+    sentencepiece::SetRandomGeneratorSeed(sentencepiece::GetFlag(FLAGS_random_seed));
   }
 
   if (rest_args.empty())
     rest_args.push_back("");  // empty means that reading from stdin.
 
-  CHECK(!absl::GetFlag(FLAGS_model).empty());
+  CHECK(!sentencepiece::GetFlag(FLAGS_model).empty());
 
   sentencepiece::SentencePieceProcessor sp;
-  CHECK_OK(sp.Load(absl::GetFlag(FLAGS_model)));
-  CHECK_OK(sp.SetEncodeExtraOptions(absl::GetFlag(FLAGS_extra_options)));
+  CHECK_OK(sp.Load(sentencepiece::GetFlag(FLAGS_model)));
+  CHECK_OK(sp.SetEncodeExtraOptions(sentencepiece::GetFlag(FLAGS_extra_options)));
 
-  if (!absl::GetFlag(FLAGS_vocabulary).empty()) {
-    CHECK_OK(sp.LoadVocabulary(absl::GetFlag(FLAGS_vocabulary),
-                               absl::GetFlag(FLAGS_vocabulary_threshold)));
+  if (!sentencepiece::GetFlag(FLAGS_vocabulary).empty()) {
+    CHECK_OK(sp.LoadVocabulary(sentencepiece::GetFlag(FLAGS_vocabulary),
+                               sentencepiece::GetFlag(FLAGS_vocabulary_threshold)));
   }
 
   auto output =
-      sentencepiece::filesystem::NewWritableFile(absl::GetFlag(FLAGS_output));
+      sentencepiece::filesystem::NewWritableFile(sentencepiece::GetFlag(FLAGS_output));
   CHECK_OK(output->status());
 
   std::string line;
@@ -96,10 +96,10 @@ int main(int argc, char *argv[]) {
   sentencepiece::NBestSentencePieceText nbest_spt;
   std::function<void(absl::string_view line)> process;
 
-  const int nbest_size = absl::GetFlag(FLAGS_nbest_size);
-  const float alpha = absl::GetFlag(FLAGS_alpha);
+  const int nbest_size = sentencepiece::GetFlag(FLAGS_nbest_size);
+  const float alpha = sentencepiece::GetFlag(FLAGS_alpha);
 
-  if (absl::GetFlag(FLAGS_generate_vocabulary)) {
+  if (sentencepiece::GetFlag(FLAGS_generate_vocabulary)) {
     process = [&](absl::string_view line) {
       CHECK_OK(sp.Encode(line, &spt));
       for (const auto &piece : spt.pieces()) {
@@ -107,53 +107,53 @@ int main(int argc, char *argv[]) {
           vocab[piece.piece()]++;
       }
     };
-  } else if (absl::GetFlag(FLAGS_output_format) == "piece") {
+  } else if (sentencepiece::GetFlag(FLAGS_output_format) == "piece") {
     process = [&](absl::string_view line) {
       CHECK_OK(sp.Encode(line, &sps));
       output->WriteLine(absl::StrJoin(sps, " "));
     };
-  } else if (absl::GetFlag(FLAGS_output_format) == "id") {
+  } else if (sentencepiece::GetFlag(FLAGS_output_format) == "id") {
     process = [&](absl::string_view line) {
       CHECK_OK(sp.Encode(line, &ids));
       output->WriteLine(absl::StrJoin(ids, " "));
     };
-  } else if (absl::GetFlag(FLAGS_output_format) == "proto") {
+  } else if (sentencepiece::GetFlag(FLAGS_output_format) == "proto") {
     process = [&](absl::string_view line) { CHECK_OK(sp.Encode(line, &spt)); };
-  } else if (absl::GetFlag(FLAGS_output_format) == "sample_piece") {
+  } else if (sentencepiece::GetFlag(FLAGS_output_format) == "sample_piece") {
     process = [&](absl::string_view line) {
       CHECK_OK(sp.SampleEncode(line, nbest_size, alpha, &sps));
       output->WriteLine(absl::StrJoin(sps, " "));
     };
-  } else if (absl::GetFlag(FLAGS_output_format) == "sample_id") {
+  } else if (sentencepiece::GetFlag(FLAGS_output_format) == "sample_id") {
     process = [&](absl::string_view line) {
       CHECK_OK(sp.SampleEncode(line, nbest_size, alpha, &ids));
       output->WriteLine(absl::StrJoin(ids, " "));
     };
-  } else if (absl::GetFlag(FLAGS_output_format) == "sample_proto") {
+  } else if (sentencepiece::GetFlag(FLAGS_output_format) == "sample_proto") {
     process = [&](absl::string_view line) {
       CHECK_OK(sp.SampleEncode(line, nbest_size, alpha, &spt));
     };
-  } else if (absl::GetFlag(FLAGS_output_format) == "nbest_piece") {
+  } else if (sentencepiece::GetFlag(FLAGS_output_format) == "nbest_piece") {
     process = [&](absl::string_view line) {
       CHECK_OK(sp.NBestEncode(line, nbest_size, &nbest_sps));
       for (const auto &result : nbest_sps) {
         output->WriteLine(absl::StrJoin(result, " "));
       }
     };
-  } else if (absl::GetFlag(FLAGS_output_format) == "nbest_id") {
+  } else if (sentencepiece::GetFlag(FLAGS_output_format) == "nbest_id") {
     process = [&](absl::string_view line) {
       CHECK_OK(sp.NBestEncode(line, nbest_size, &nbest_ids));
       for (const auto &result : nbest_ids) {
         output->WriteLine(absl::StrJoin(result, " "));
       }
     };
-  } else if (absl::GetFlag(FLAGS_output_format) == "nbest_proto") {
+  } else if (sentencepiece::GetFlag(FLAGS_output_format) == "nbest_proto") {
     process = [&](absl::string_view line) {
       CHECK_OK(sp.NBestEncode(line, nbest_size, &nbest_spt));
     };
   } else {
     LOG(FATAL) << "Unknown output format: "
-               << absl::GetFlag(FLAGS_output_format);
+               << sentencepiece::GetFlag(FLAGS_output_format);
   }
 
   for (const auto &filename : rest_args) {
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  if (absl::GetFlag(FLAGS_generate_vocabulary)) {
+  if (sentencepiece::GetFlag(FLAGS_generate_vocabulary)) {
     for (const auto &it : sentencepiece::Sorted(vocab)) {
       output->WriteLine(it.first + "\t" +
                         sentencepiece::string_util::SimpleItoa(it.second));

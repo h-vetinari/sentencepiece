@@ -28,6 +28,7 @@
 #include "absl/strings/str_cat.h"
 
 #include "common.h"
+#include "glue/flags/flag.h"
 #include "util.h"
 
 namespace sentencepiece {
@@ -57,9 +58,9 @@ bool RegisterTest(const char *base, const char *name, void (*func)()) {
 int RunAllTests() {
   int num = 0;
 #ifdef OS_WIN
-  _mkdir(absl::GetFlag(FLAGS_test_tmpdir).c_str());
+  _mkdir(sentencepiece::GetFlag(FLAGS_test_tmpdir).c_str());
 #else
-  mkdir(absl::GetFlag(FLAGS_test_tmpdir).c_str(), S_IRUSR | S_IWUSR | S_IXUSR);
+  mkdir(sentencepiece::GetFlag(FLAGS_test_tmpdir).c_str(), S_IRUSR | S_IWUSR | S_IXUSR);
 #endif
 
   if (tests == nullptr) {

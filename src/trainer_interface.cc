@@ -24,8 +24,6 @@
 
 #include "absl/container/flat_hash_map.h"
 #include "absl/memory/memory.h"
-#include "absl/random/distributions.h"
-#include "absl/random/random.h"
 #include "absl/strings/numbers.h"
 #include "absl/strings/str_cat.h"
 #include "absl/strings/str_format.h"
@@ -33,6 +31,8 @@
 #include "absl/strings/str_split.h"
 
 #include "filesystem.h"
+#include "glue/random/distributions.h"
+#include "glue/random/random.h"
 #include "model_factory.h"
 #include "model_interface.h"
 #include "normalizer.h"
@@ -304,10 +304,10 @@ bool TrainerInterface::IsValidSentencePiece(
 }
 
 template <typename T>
-void AddDPNoise(const TrainerSpec &trainer_spec, absl::SharedBitGen &generator,
+void AddDPNoise(const TrainerSpec &trainer_spec, sentencepiece::SharedBitGen &generator,
                 T *to_update) {
   if (trainer_spec.differential_privacy_noise_level() > 0) {
-    float random_num = absl::Gaussian<float>(
+    float random_num = sentencepiece::Gaussian<float>(
         generator, 0, trainer_spec.differential_privacy_noise_level());
 
     *to_update =
@@ -481,7 +481,7 @@ END:
       for (int n = 0; n < num_workers; ++n) {
         pool->Schedule([&, n]() {
           // One per thread generator.
-          absl::SharedBitGen generator;
+          sentencepiece::SharedBitGen generator;
           for (size_t i = n; i < sentences_.size(); i += num_workers) {
             AddDPNoise<int64>(trainer_spec_, generator,
                               &(sentences_[i].second));

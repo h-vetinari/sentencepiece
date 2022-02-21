@@ -20,14 +20,14 @@
 #include <sstream>
 #include <string>
 
-#include "absl/flags/flag.h"
-#include "absl/flags/parse.h"
 #include "absl/strings/string_view.h"
 
 #include "common.h"
+#include "glue/flags/flag.h"
+#include "glue/flags/parse.h"
 
-ABSL_DECLARE_FLAG(std::string, test_tmpdir);
-ABSL_DECLARE_FLAG(std::string, test_srcdir);
+STPC_DECLARE_FLAG(std::string, test_tmpdir);
+STPC_DECLARE_FLAG(std::string, test_srcdir);
 
 namespace sentencepiece {
 namespace test {

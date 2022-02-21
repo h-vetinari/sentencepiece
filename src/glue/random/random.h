@@ -12,14 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.!
 
-#ifndef ABSL_FLAGS_PARSE_H_
-#define ABSL_FLAGS_PARSE_H_
+#ifndef ABSL_CONTAINER_RANDOM_H_
+#define ABSL_CONTAINER_RANDOM_H_
 
-#include <vector>
+#include <random>
 
-namespace absl {
+#include "../../util.h"
 
-std::vector<char *> ParseCommandLine(int argc, char *argv[]);
-}  // namespace absl
+using sentencepiece::random::GetRandomGenerator;
 
-#endif  // ABSL_FLAGS_PARSE_H_
+namespace sentencepiece {
+
+class SharedBitGen {
+ public:
+  std::mt19937 *engine() { return GetRandomGenerator(); }
+};
+
+}  // namespace sentencepiece
+
+#endif  // ABSL_CONTAINER_RANDOM_H_

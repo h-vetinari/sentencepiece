@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.!
 
+#include "glue/flags/flag.h"
 #include "init.h"
 #include "testharness.h"
 
 #ifdef OS_WIN
-ABSL_FLAG(std::string, test_srcdir, "..\\data", "Data directory.");
+STPC_FLAG(std::string, test_srcdir, "..\\data", "Data directory.");
 #else
-ABSL_FLAG(std::string, test_srcdir, "../data", "Data directory.");
+STPC_FLAG(std::string, test_srcdir, "../data", "Data directory.");
 #endif
 
-ABSL_FLAG(std::string, test_tmpdir, "test_tmp", "Temporary directory.");
+STPC_FLAG(std::string, test_tmpdir, "test_tmp", "Temporary directory.");
 
 int main(int argc, char **argv) {
   sentencepiece::ScopedResourceDestructor cleaner;

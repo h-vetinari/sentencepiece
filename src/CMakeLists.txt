@@ -13,7 +13,9 @@
 # limitations under the License.!
 
 if (SPM_USE_EXTERNAL_ABSL)
-  set(ABSL_FLAGS_SRCS "")
+  # originally part of third_party/absl, but actually
+  # only relevant for sentencepiece; now moved.
+  set(ABSL_FLAGS_SRCS "glue/flags/flag.cc")
   set(ABSL_STRINGS_SRCS "")
   list(APPEND SPM_LIBS absl::strings)
   list(APPEND SPM_LIBS absl::flags)

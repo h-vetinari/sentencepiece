@@ -23,6 +23,7 @@
 
 #include "builder.h"
 #include "filesystem.h"
+#include "glue/flags/flag.h"
 #include "model_interface.h"
 #include "normalizer.h"
 #include "sentencepiece.pb.h"
@@ -996,13 +997,13 @@ TEST(SentencePieceProcessorTest, EndToEndTest) {
 
   {
     auto output = filesystem::NewWritableFile(
-        util::JoinPath(absl::GetFlag(FLAGS_test_tmpdir), "model"), true);
+        util::JoinPath(sentencepiece::GetFlag(FLAGS_test_tmpdir), "model"), true);
     output->Write(model_proto.SerializeAsString());
   }
 
   SentencePieceProcessor sp;
   EXPECT_TRUE(
-      sp.Load(util::JoinPath(absl::GetFlag(FLAGS_test_tmpdir), "model")).ok());
+      sp.Load(util::JoinPath(sentencepiece::GetFlag(FLAGS_test_tmpdir), "model")).ok());
 
   EXPECT_EQ(model_proto.SerializeAsString(),
             sp.model_proto().SerializeAsString());
@@ -1469,10 +1470,10 @@ TEST(SentencePieceProcessorTest, VocabularyTest) {
   auto GetInlineFilename = [](const std::string content) {
     {
       auto out = filesystem::NewWritableFile(
-          util::JoinPath(absl::GetFlag(FLAGS_test_tmpdir), "vocab.txt"));
+          util::JoinPath(sentencepiece::GetFlag(FLAGS_test_tmpdir), "vocab.txt"));
       out->Write(content);
     }
-    return util::JoinPath(absl::GetFlag(FLAGS_test_tmpdir), "vocab.txt");
+    return util::JoinPath(sentencepiece::GetFlag(FLAGS_test_tmpdir), "vocab.txt");
   };
 
   sp1->set_type(ModelProto::SentencePiece::UNKNOWN);

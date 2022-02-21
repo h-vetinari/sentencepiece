@@ -18,17 +18,17 @@
 #include <sstream>
 #include <string>
 
-#include "absl/flags/flag.h"
 #include "absl/strings/string_view.h"
 
 #include "builder.h"
 #include "filesystem.h"
+#include "glue/flags/flag.h"
 #include "init.h"
 #include "sentencepiece_processor.h"
 
 using sentencepiece::normalizer::Builder;
 
-ABSL_FLAG(bool, output_precompiled_header, false,
+STPC_FLAG(bool, output_precompiled_header, false,
           "make normalization_rule.h file");
 
 namespace sentencepiece {
@@ -187,7 +187,7 @@ int main(int argc, char **argv) {
     data.emplace_back(p.first, index);
   }
 
-  if (absl::GetFlag(FLAGS_output_precompiled_header)) {
+  if (sentencepiece::GetFlag(FLAGS_output_precompiled_header)) {
     constexpr char kPrecompiledHeaderFileName[] = "normalization_rule.h";
     auto output =
         sentencepiece::filesystem::NewWritableFile(kPrecompiledHeaderFileName);

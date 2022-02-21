@@ -20,6 +20,7 @@
 #include "absl/strings/str_format.h"
 
 #include "filesystem.h"
+#include "glue/flags/flag.h"
 #include "testharness.h"
 #include "util.h"
 
@@ -494,7 +495,7 @@ TEST(TrainerInterfaceTest, SerializeTest) {
 
 TEST(TrainerInterfaceTest, CharactersTest) {
   const std::string input_file =
-      util::JoinPath(absl::GetFlag(FLAGS_test_tmpdir), "input");
+      util::JoinPath(sentencepiece::GetFlag(FLAGS_test_tmpdir), "input");
   {
     auto output = filesystem::NewWritableFile(input_file);
     // Make a single line with 50 "a", 49 "あ", and 1 "b".
@@ -560,7 +561,7 @@ TEST(TrainerInterfaceTest, MultiFileSentenceIteratorTest) {
   std::vector<std::string> files;
   std::vector<std::string> expected;
   for (int i = 0; i < 10; ++i) {
-    const std::string file = util::JoinPath(absl::GetFlag(FLAGS_test_tmpdir),
+    const std::string file = util::JoinPath(sentencepiece::GetFlag(FLAGS_test_tmpdir),
                                             absl::StrCat("input", i));
     auto output = filesystem::NewWritableFile(file);
     int num_line = (rand() % 100) + 1;
@@ -582,7 +583,7 @@ TEST(TrainerInterfaceTest, MultiFileSentenceIteratorTest) {
 TEST(TrainerInterfaceTest, MultiFileSentenceIteratorErrorTest) {
   std::vector<std::string> files;
   for (int i = 0; i < 10; ++i) {
-    const std::string file = util::JoinPath(absl::GetFlag(FLAGS_test_tmpdir),
+    const std::string file = util::JoinPath(sentencepiece::GetFlag(FLAGS_test_tmpdir),
                                             absl::StrCat("input_not_exist", i));
     files.push_back(file);
   }

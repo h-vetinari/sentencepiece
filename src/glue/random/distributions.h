@@ -19,13 +19,13 @@
 
 #include "random.h"
 
-namespace absl {
+namespace sentencepiece {
 
 template <typename T>
 T Gaussian(SharedBitGen &generator, T mean, T stddev) {
   std::normal_distribution<> dist(mean, stddev);
   return dist(*generator.engine());
 }
-}  // namespace absl
+}  // namespace sentencepiece
 
 #endif  // ABSL_CONTAINER_DISTRIBUTIONS_H_
