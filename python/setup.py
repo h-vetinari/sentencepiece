@@ -77,10 +77,11 @@ class build_ext(_build_ext):
   """Override build_extension to run cmake."""
 
   def build_extension(self, ext):
-    cflags, libs = get_cflags_and_libs('../build/root')
+    # cflags, libs = get_cflags_and_libs('./bundled/root')
+    cflags = ['-std=c++17']
 
-    if len(libs) == 0:
-      if is_sentencepiece_installed():
+    if True:
+      if True:
         cflags = cflags + run_pkg_config('cflags')
         libs = run_pkg_config('libs')
       else:
@@ -108,17 +109,21 @@ if os.name == 'nt':
   arch = 'win32'
   if sys.maxsize > 2**32:
     arch = 'amd64'
-  if os.path.exists('..\\build\\root_{}\\lib'.format(arch)):
+  if False:
     cflags = ['/std:c++17', '/I..\\build\\root_{}\\include'.format(arch)]
     libs = [
         '..\\build\\root_{}\\lib\\sentencepiece.lib'.format(arch),
         '..\\build\\root_{}\\lib\\sentencepiece_train.lib'.format(arch),
     ]
-  elif os.path.exists('..\\build\\root\\lib'):
-    cflags = ['/std:c++17', '/I..\\build\\root\\include']
+  elif True:
+    cflags = ['/std:c++17', '/MD', '/I' + os.environ["LIBRARY_INC"]]
     libs = [
-        '..\\build\\root\\lib\\sentencepiece.lib',
-        '..\\build\\root\\lib\\sentencepiece_train.lib',
+      # equivalent of -L$PREFIX/lib -lsentencepiece -lsentencepiece_train -lprotobuf-lite
+      os.environ["LIBRARY_LIB"] + f"\\{x}.lib"
+      # protobuf actually has the lib-prefix in the name also on windows;
+      # since libsentencepiece is static on windows, we also need _its_
+      # host dependencies for the link interface, i.e. also abseil
+      for x in ["sentencepiece", "sentencepiece_train", "libprotobuf-lite", "abseil_dll"]
     ]
   else:
     # build library locally with cmake and vc++.
