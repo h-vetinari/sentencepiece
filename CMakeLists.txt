@@ -142,9 +142,7 @@ join_paths(includedir_for_pc_file "\${prefix}" "${CMAKE_INSTALL_INCLUDEDIR}")
 configure_file("${PROJECT_SOURCE_DIR}/config.h.in" "config.h")
 configure_file("${PROJECT_SOURCE_DIR}/sentencepiece.pc.in" "sentencepiece.pc" @ONLY)
 
-if (NOT MSVC)
-  # suppress warning for C++11 features.
-#  add_definitions("-Wno-deprecated-declarations -Wno-deprecated-enum-enum-conversion")
+if (TRUE)
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/sentencepiece.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 endif()
 
