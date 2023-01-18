@@ -244,7 +244,7 @@ endif()
 if (SPM_ENABLE_SHARED)
   target_link_libraries(sentencepiece ${SPM_LIBS})
   target_link_libraries(sentencepiece_train ${SPM_LIBS} sentencepiece)
-  set(SPM_INSTALLTARGETS sentencepiece sentencepiece_train)
+  set(SPM_LIBTARGETS sentencepiece sentencepiece_train)
   set_target_properties(sentencepiece sentencepiece_train PROPERTIES SOVERSION 0 VERSION 0.0.0)
   set_target_properties(sentencepiece PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
   set_target_properties(sentencepiece_train PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
@@ -258,7 +258,7 @@ if (SPM_ENABLE_SHARED)
 else()
   add_library(sentencepiece ALIAS sentencepiece-static)
   add_library(sentencepiece_train ALIAS sentencepiece_train-static)
-  set(SPM_INSTALLTARGETS sentencepiece-static sentencepiece_train-static)
+  set(SPM_LIBTARGETS sentencepiece-static sentencepiece_train-static)
 
   set_target_properties(sentencepiece-static PROPERTIES OUTPUT_NAME "sentencepiece")
   set_target_properties(sentencepiece_train-static PROPERTIES OUTPUT_NAME "sentencepiece_train")
@@ -305,7 +305,7 @@ if (SPM_ENABLE_NFKC_COMPILE)
   target_link_libraries(compile_charsmap sentencepiece sentencepiece_train)
 endif()
 
-list(APPEND SPM_INSTALLTARGETS
+set(SPM_BINTARGETS
   spm_encode spm_decode spm_normalize spm_train spm_export_vocab)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
@@ -315,11 +315,20 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 else()
-install(TARGETS ${SPM_INSTALLTARGETS}
+install(TARGETS ${SPM_BINTARGETS}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
+
+install(TARGETS ${SPM_LIBTARGETS}
+  EXPORT sentencepieceTargets
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(EXPORT sentencepieceTargets
+  FILE sentencepieceTargets.cmake
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/sentencepiece")
 
 install(FILES sentencepiece_trainer.h sentencepiece_processor.h
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
