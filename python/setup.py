@@ -117,13 +117,21 @@ if os.name == 'nt':
     ]
   elif True:
     cflags = ['/std:c++17', '/MD', '/I' + os.environ["LIBRARY_INC"]]
+    # most of abseil can be built as shared, which ends up in one giant library
+    # called abseil_dll; the absl_flags_* libraries always stay static
+    absl_libs = [
+        "abseil_dll", "absl_log_flags", "absl_flags_commandlineflag", "absl_flags_commandlineflag_internal",
+        "absl_flags_config", "absl_flags_internal", "absl_flags_marshalling", "absl_flags_parse",
+        "absl_flags_private_handle_accessor", "absl_flags_program_name", "absl_flags_reflection",
+        "absl_flags_usage", "absl_flags_usage_internal",
+    ]
     libs = [
       # equivalent of -L$PREFIX/lib -lsentencepiece -lsentencepiece_train -lprotobuf-lite
       os.environ["LIBRARY_LIB"] + f"\\{x}.lib"
       # protobuf actually has the lib-prefix in the name also on windows;
       # since libsentencepiece is static on windows, we also need _its_
       # host dependencies for the link interface, i.e. also abseil
-      for x in ["sentencepiece", "sentencepiece_train", "libprotobuf-lite", "abseil_dll"]
+      for x in ["sentencepiece", "sentencepiece_train", "libprotobuf-lite"] + absl_libs
     ]
   else:
     # build library locally with cmake and vc++.
